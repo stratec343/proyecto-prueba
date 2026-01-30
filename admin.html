@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - Ganar Amigos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos específicos para el panel admin */
+        .admin-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .admin-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+        }
+        
+        .admin-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .admin-logo i {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .admin-logo h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+        
+        .admin-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .admin-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .admin-form input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-form input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .admin-btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .admin-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-login {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-login:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-back {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-back:hover {
+            background-color: #e9ecef;
+        }
+        
+        .message {
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .message.error {
+            background-color: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+            display: block;
+        }
+        
+        .message.success {
+            background-color: #efe;
+            color: #393;
+            border: 1px solid #cfc;
+            display: block;
+        }
+        
+        .admin-panel {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .admin-title h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+        
+        .admin-title p {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-logout {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-logout:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-reset {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background-color: #d68910;
+        }
+        
+        .admin-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .admin-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .admin-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .edit-item {
+            margin-bottom: 20px;
+        }
+        
+        .edit-item label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+        
+        .edit-item textarea, .edit-item input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-item textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .edit-item textarea:focus, .edit-item input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .save-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .save-btn:hover {
+            background-color: #219653;
+        }
+        
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .instructions h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            color: #555;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-page" class="admin-container">
+        <div class="admin-card">
+            <div class="admin-logo">
+                <i class="fas fa-user-cog"></i>
+                <h1>Panel de Administración</h1>
+            </div>
+            
+            <div id="login-message" class="message"></div>
+            
+            <form id="login-form" class="admin-form">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <div class="admin-btn-group">
+                    <button type="button" class="admin-btn btn-back" onclick="window.location.href='index.html'">
+                        <i class="fas fa-arrow-left"></i> Volver al sitio
+                    </button>
+                    <button type="submit" class="admin-btn btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="admin-panel" class="admin-panel" style="display: none;">
+        <div class="admin-header">
+            <div class="admin-title">
+                <h1>Panel de Administración</h1>
+                <p>Modifica el contenido del sitio web. Los cambios se guardan localmente en tu navegador.</p>
+            </div>
+            
+            <div class="admin-actions">
+                <button class="btn btn-reset" onclick="resetAllContent()">
+                    <i class="fas fa-redo"></i> Restablecer todo
+                </button>
+                <button class="btn btn-logout" onclick="logoutAdmin()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                </button>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h4>Instrucciones:</h4>
+            <ul>
+                <li>Edita el contenido en los campos de texto a continuación</li>
+                <li>Los cambios se guardan automáticamente al salir del campo</li>
+                <li>También puedes hacer clic en el botón "Guardar" de cada sección</li>
+                <li>Los cambios solo se verán en este navegador</li>
+                <li>Para ver los cambios en el sitio, ve a la <a href="index.html" target="_blank">página principal</a></li>
+            </ul>
+        </div>
+        
+        <div class="admin-sections">
+            <!-- Sección Hero -->
+            <div class="admin-section">
+                <h3>Sección Hero</h3>
+                
+                <div class="edit-item">
+                    <label for="hero-title">Título principal</label>
+                    <textarea id="hero-title" data-key="hero-title">Cómo ganar amigos e influir sobre las personas</textarea>
+                </div>
+                
+                <div class="edit-item">
+                    <label for="hero-subtitle">Subtítulo</label>
+                    <textarea id="hero-subtitle" data-key="hero-subtitle">Descubre las técnicas probadas para mejorar tus relaciones personales y profesionales</textarea>
+                </div>
+                
+                <button class="save-btn" onclick="saveSection('hero')">
+                    <i class="fas fa-save"></i> Guardar cambios
+                </button>
+            </div>
+            
+            <!-- Sección Libro -->
+            <div class="admin-section">
+                <h3>Sección El Libro</h3>
+                
+                <div class="edit-item">
+                    <label for="book-title">Título de sección</label>
+                    <input type="text" id="book-title" data-key="book-title" value="El Libro">
+                </div>
+                
+                <div class="edit-item">
+                    <label for="book-subtitle">Subtítulo</label>
+                    <input type="text" id="book-subtitle" data-key="book-subtitle" value="Un clásico atemporal">
+                </div>
+                
+                <div class="edit-item">
+                    <label for="book-description">Descripción (párrafo 1)</label>
+                    <textarea id="book-description" data-key="book-description">Publicado por primera vez en 1936, "Cómo ganar amigos e influir sobre las personas" se ha convertido en uno de los libros de autoayuda y desarrollo personal más vendidos de todos los tiempos. Con más de 15 millones de copias vendidas, sus principios siguen siendo relevantes en la actualidad para mejorar las relaciones interpersonales en todos los ámbitos de la vida.</textarea>
+                </div>
+                
+                <div class="edit-item">
+                    <label for="book-description2">Descripción (párrafo 2)</label>
+                    <textarea id="book-description2" data-key="book-description2">El libro presenta técnicas fundamentales para tratar con las personas, ganar su aceptación y cambiar su forma de pensar sin generar resentimientos. Sus lecciones son aplicables tanto en el entorno laboral como en la vida personal.</textarea>
+                </div>
+                
+                <button class="save-btn" onclick="saveSection('book')">
+                    <i class="fas fa-save"></i> Guardar cambios
+                </button>
+            </div>
+            
+            <!-- Sección Aprendizajes -->
+            <div class="admin-section">
+                <h3>Sección Aprendizajes</h3>
+                
+                <div class="edit-item">
+                    <label for="learnings-title">Título de sección</label>
+                    <input type="text" id="learnings-title" data-key="learnings-title" value="Aprendizajes Principales">
+                </div>
+                
+                <div class="edit-item">
+                    <label for="learnings-subtitle">Subtítulo</label>
+                    <textarea id="learnings-subtitle" data-key="learnings-subtitle">Principios fundamentales para mejorar tus relaciones personales y profesionales</textarea>
+                </div>
+                
+                <div class="edit-item">
+                    <label for="learning-1-title">Aprendizaje 1 - Título</label>
+                    <input type="text" id="learning-1-title" data-key="learning-1-title" value="No critiques, no condenes, no te quejes">
+                </div>
+                
+                <div class="edit-item">
+                    <label for="learning-1-desc">Aprendizaje 1 - Descripción</label>
+                    <textarea id="learning-1-desc" data-key="learning-1-desc">La crítica es inútil porque pone a la otra persona a la defensiva y hace que trate de justificarse. En lugar de condenar a los demás, intenta comprenderlos.</textarea>
+                </div>
+                
+                <button class="save-btn" onclick="saveSection('learnings')">
+                    <i class="fas fa-save"></i> Guardar cambios
+                </button>
+            </div>
+            
+            <!-- Sección Autor -->
+            <div class="admin-section">
+                <h3>Sección Autor</h3>
+                
+                <div class="edit-item">
+                    <label for="author-title">Título de sección</label>
+                    <input type="text" id="author-title" data-key="author-title" value="El Autor">
+                </div>
+                
+                <div class="edit-item">
+                    <label for="author-name">Nombre del autor</label>
+                    <input type="text" id="author-name" data-key="author-name" value="Dale Carnegie">
+                </div>
+                
+                <div class="edit-item">
+                    <label for="author-description">Descripción (párrafo 1)</label>
+                    <textarea id="author-description" data-key="author-description">Dale Carnegie (1888-1955) fue un escritor y conferenciante estadounidense, pionero en el campo del desarrollo personal, la oratoria y las habilidades interpersonales. Nacido en Missouri, comenzó su carrera como vendedor y actor antes de encontrar su verdadera vocación como profesor de comunicación.</textarea>
+                </div>
+                
+                <div class="edit-item">
+                    <label for="author-quote">Cita del autor</label>
+                    <textarea id="author-quote" data-key="author-quote">"Trata a cada persona con quien te encuentres como si fuera la persona más importante de la Tierra, porque para ella lo es."</textarea>
+                </div>
+                
+                <button class="save-btn" onclick="saveSection('author')">
+                    <i class="fas fa-save"></i> Guardar cambios
+                </button>
+            </div>
+            
+            <!-- Sección Contacto -->
+            <div class="admin-section">
+                <h3>Sección Contacto</h3>
+                
+                <div class="edit-item">
+                    <label for="contact-title">Título de sección</label>
+                    <input type="text" id="contact-title" data-key="contact-title" value="Transforma tus relaciones">
+                </div>
+                
+                <div class="edit-item">
+                    <label for="contact-subtitle">Subtítulo</label>
+                    <textarea id="contact-subtitle" data-key="contact-subtitle">¿Listo para aplicar estos principios en tu vida? Déjanos tus datos y te enviaremos más recursos gratuitos.</textarea>
+                </div>
+                
+                <div class="edit-item">
+                    <label for="contact-info-desc">Descripción</label>
+                    <textarea id="contact-info-desc" data-key="contact-info-desc">Las técnicas presentadas en este libro han transformado la vida de millones de personas alrededor del mundo. Aprender a comunicarte efectivamente, entender a los demás y construir relaciones sólidas es una habilidad que puedes desarrollar.</textarea>
+                </div>
+                
+                <div class="edit-item">
+                    <label for="feature-1">Característica 1</label>
+                    <input type="text" id="feature-1" data-key="feature-1" value="Mejora tus relaciones laborales">
+                </div>
+                
+                <button class="save-btn" onclick="saveSection('contact')">
+                    <i class="fas fa-save"></i> Guardar cambios
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ===== ADMIN LOGIN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si ya está autenticado
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            
+            if (isAdmin) {
+                showAdminPanel();
+                loadSavedContentToForm();
+            } else {
+                document.getElementById('login-page').style.display = 'flex';
+            }
+            
+            // Configurar formulario de login
+            const loginForm = document.getElementById('login-form');
+            const loginMessage = document.getElementById('login-message');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    // Credenciales predeterminadas (en un caso real, esto estaría en un servidor)
+                    const defaultUsername = 'admin';
+                    const defaultPassword = 'ganaramigos123';
+                    
+                    if (username === defaultUsername && password === defaultPassword) {
+                        // Guardar estado de autenticación
+                        localStorage.setItem('isAdmin', 'true');
+                        
+                        // Mostrar panel admin
+                        showAdminPanel();
+                        loadSavedContentToForm();
+                        
+                        // Mostrar mensaje de éxito
+                        showLoginMessage('¡Inicio de sesión exitoso!', 'success');
+                    } else {
+                        // Mostrar mensaje de error
+                        showLoginMessage('Usuario o contraseña incorrectos', 'error');
+                    }
+                });
+            }
+        });
+        
+        function showLoginMessage(message, type) {
+            const loginMessage = document.getElementById('login-message');
+            loginMessage.textContent = message;
+            loginMessage.className = `message ${type}`;
+            
+            // Ocultar mensaje después de 5 segundos
+            if (type === 'error') {
+                setTimeout(() => {
+                    loginMessage.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        function showAdminPanel() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+        }
+        
+        function loadSavedContentToForm() {
+            const savedContent = JSON.parse(localStorage.getItem('bookContent') || '{}');
+            
+            // Cargar contenido guardado en los campos del formulario
+            Object.keys(savedContent).forEach(key => {
+                const input = document.querySelector(`[data-key="${key}"]`);
+                if (input) {
+                    input.value = savedContent[key];
+                    
+                    // Para textareas, también necesitamos actualizar el innerHTML
+                    if (input.tagName === 'TEXTAREA') {
+                        input.innerHTML = savedContent[key];
+                    }
+                }
+            });
+        }
+        
+        function saveSection(section) {
+            let inputs;
+            
+            // Obtener todos los inputs de la sección
+            if (section === 'hero') {
+                inputs = document.querySelectorAll('#hero-title, #hero-subtitle');
+            } else if (section === 'book') {
+                inputs = document.querySelectorAll('#book-title, #book-subtitle, #book-description, #book-description2');
+            } else if (section === 'learnings') {
+                inputs = document.querySelectorAll('#learnings-title, #learnings-subtitle, #learning-1-title, #learning-1-desc, #learning-2-title, #learning-2-desc, #learning-3-title, #learning-3-desc, #learning-4-title, #learning-4-desc, #learning-5-title, #learning-5-desc, #learning-6-title, #learning-6-desc');
+            } else if (section === 'author') {
+                inputs = document.querySelectorAll('#author-title, #author-name, #author-description, #author-description2, #author-description3, #author-quote');
+            } else if (section === 'contact') {
+                inputs = document.querySelectorAll('#contact-title, #contact-subtitle, #contact-info-title, #contact-info-desc, #feature-1, #feature-2, #feature-3');
+            }
+            
+            // Guardar cada campo
+            inputs.forEach(input => {
+                const key = input.getAttribute('data-key');
+                const value = input.value || input.innerHTML;
+                
+                if (key && value !== undefined) {
+                    saveContent(key, value);
+                }
+            });
+            
+            // Mostrar confirmación
+            alert('Cambios guardados correctamente. Ve a la página principal para ver los cambios.');
+        }
+        
+        function saveContent(key, content) {
+            const savedContent = JSON.parse(localStorage.getItem('bookContent') || '{}');
+            savedContent[key] = content;
+            localStorage.setItem('bookContent', JSON.stringify(savedContent));
+        }
+        
+        function resetAllContent() {
+            if (confirm('¿Estás seguro de que quieres restablecer todo el contenido a los valores originales? Esto eliminará todos los cambios guardados.')) {
+                localStorage.removeItem('bookContent');
+                
+                // Restablecer valores del formulario a los originales
+                const defaultContent = {
+                    'hero-title': 'Cómo ganar amigos e influir sobre las personas',
+                    'hero-subtitle': 'Descubre las técnicas probadas para mejorar tus relaciones personales y profesionales',
+                    'book-title': 'El Libro',
+                    'book-subtitle': 'Un clásico atemporal',
+                    'book-description': 'Publicado por primera vez en 1936, "Cómo ganar amigos e influir sobre las personas" se ha convertido en uno de los libros de autoayuda y desarrollo personal más vendidos de todos los tiempos. Con más de 15 millones de copias vendidas, sus principios siguen siendo relevantes en la actualidad para mejorar las relaciones interpersonales en todos los ámbitos de la vida.',
+                    'book-description2': 'El libro presenta técnicas fundamentales para tratar con las personas, ganar su aceptación y cambiar su forma de pensar sin generar resentimientos. Sus lecciones son aplicables tanto en el entorno laboral como en la vida personal.',
+                    'learnings-title': 'Aprendizajes Principales',
+                    'learnings-subtitle': 'Principios fundamentales para mejorar tus relaciones personales y profesionales',
+                    'learning-1-title': 'No critiques, no condenes, no te quejes',
+                    'learning-1-desc': 'La crítica es inútil porque pone a la otra persona a la defensiva y hace que trate de justificarse. En lugar de condenar a los demás, intenta comprenderlos.',
+                    'learning-2-title': 'Demuestra aprecio sincero',
+                    'learning-2-desc': 'El deseo más profundo de todo ser humano es sentirse importante y apreciado. Reconoce honestamente los logros y cualidades de los demás.',
+                    'learning-3-title': 'Despierta en los demás un deseo ferviente',
+                    'learning-3-desc': 'La única manera de influir en alguien es hablando sobre lo que él quiere y mostrándole cómo conseguirlo. Enfócate en las necesidades del otro.',
+                    'learning-4-title': 'Sonríe',
+                    'learning-4-desc': 'Una sonrisa dice "me gustas, me haces feliz, me alegro de verte". Es una señal de amistad que abre puertas y crea una primera impresión positiva.',
+                    'learning-5-title': 'Recuerda que el nombre es importante',
+                    'learning-5-desc': 'El nombre de una persona es para ella el sonido más dulce e importante en cualquier idioma. Usarlo muestra respeto y atención personal.',
+                    'learning-6-title': 'Sé un buen oyente',
+                    'learning-6-desc': 'Anima a los demás a hablar de sí mismos. Escucha con interés genuino y haz preguntas sobre temas que le interesen a tu interlocutor.',
+                    'author-title': 'El Autor',
+                    'author-name': 'Dale Carnegie',
+                    'author-description': 'Dale Carnegie (1888-1955) fue un escritor y conferenciante estadounidense, pionero en el campo del desarrollo personal, la oratoria y las habilidades interpersonales. Nacido en Missouri, comenzó su carrera como vendedor y actor antes de encontrar su verdadera vocación como profesor de comunicación.',
+                    'author-description2': 'En 1912, comenzó a impartir cursos sobre oratoria y relaciones humanas que se hicieron tremendamente populares. Su método práctico y directo, basado en principios psicológicos fundamentales, revolucionó la manera en que las personas se relacionaban en el ámbito empresarial y personal.',
+                    'author-description3': 'Su obra más famosa, "Cómo ganar amigos e influir sobre las personas", ha inspirado a generaciones de líderes, empresarios y personas que buscan mejorar sus relaciones interpersonales.',
+                    'author-quote': '"Trata a cada persona con quien te encuentres como si fuera la persona más importante de la Tierra, porque para ella lo es."',
+                    'contact-title': 'Transforma tus relaciones',
+                    'contact-subtitle': '¿Listo para aplicar estos principios en tu vida? Déjanos tus datos y te enviaremos más recursos gratuitos.',
+                    'contact-info-title': 'El poder de las relaciones humanas',
+                    'contact-info-desc': 'Las técnicas presentadas en este libro han transformado la vida de millones de personas alrededor del mundo. Aprender a comunicarte efectivamente, entender a los demás y construir relaciones sólidas es una habilidad que puedes desarrollar.',
+                    'feature-1': 'Mejora tus relaciones laborales',
+                    'feature-2': 'Desarrolla liderazgo auténtico',
+                    'feature-3': 'Aumenta tu influencia positiva'
+                };
+                
+                // Actualizar campos del formulario
+                Object.keys(defaultContent).forEach(key => {
+                    const input = document.querySelector(`[data-key="${key}"]`);
+                    if (input) {
+                        input.value = defaultContent[key];
+                        
+                        if (input.tagName === 'TEXTAREA') {
+                            input.innerHTML = defaultContent[key];
+                        }
+                    }
+                });
+                
+                alert('Contenido restablecido a los valores originales.');
+            }
+        }
+        
+        function logoutAdmin() {
+            localStorage.setItem('isAdmin', 'false');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
